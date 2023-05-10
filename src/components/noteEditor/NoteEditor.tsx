@@ -8,7 +8,7 @@ export const NoteEditor = () => {
   }, []);
 
   return (
-    <div className="min-h-[86vh] h-full">
+    <div className="h-[72vh] ">
       <textarea
         onChange={handleNote}
         value={note}
@@ -18,7 +18,7 @@ export const NoteEditor = () => {
         resize-none 
         text-gray-700  
         border
-        rounded-lg
+        rounded-sm
         focus:outline-none
         focus:ring-1
         focus:ring-blue-gray-300

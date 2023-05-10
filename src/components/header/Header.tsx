@@ -9,8 +9,8 @@ export const Header = () => {
       <div className="flex justify-between flex-col md:flex-row">
         <div className="flex mb-2 md:mb-0">
           <AddBtn />
-          <DeleteBtn />
-          <WriteBtn />{' '}
+          <DeleteBtn color="white" size={25} />
+          <WriteBtn color="white" size={25} />{' '}
         </div>
         <div>
           <SearchBox />

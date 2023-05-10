@@ -8,10 +8,10 @@ export const Note = () => {
       <Link className="block h-full" to={`/${id}`}>
         <h2 className="text-lg font-semibold mb-2">Note title some text</h2>
         <div className="grid grid-cols-6 py-1">
-          <div className="flex items-center text-sm col-span-2 lg:col-span-1 font-semibold">
+          <div className="flex items-center text-sm col-span-2 lg:col-span-1.5 font-semibold">
             12:17 PM
           </div>
-          <div className="flex items-center col-span-4 lg:col-span-5 line-clamp-1">
+          <div className="flex items-center col-span-4 lg:col-span-4.5 line-clamp-1">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam exercitationem deserunt
             pariatur doloremque architecto sequi rem eligendi unde vero voluptate voluptatum
             excepturi tenetur corrupti voluptates soluta, maxime id recusandae dolor!
