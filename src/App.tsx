@@ -1,9 +1,15 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { Modal } from './components/modal/Modal';
+import { Layout } from './layout/Layout';
 
 function App() {
-  return <div className="App"></div>;
+  return (
+    <div className="App ">
+      {/* <Modal /> */}
+      <Layout />
+    </div>
+  );
 }
 
 export default App;
