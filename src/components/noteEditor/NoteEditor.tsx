@@ -1,7 +1,20 @@
-import { useState, useCallback, ChangeEvent } from 'react';
+import { useState, useCallback, ChangeEvent, useContext, useEffect, FC } from 'react';
+import { NotesContext } from '../../App';
+import { useParams } from 'react-router-dom';
+import { INote } from '../../App';
+interface noteItemProps {
+  noteItem: INote | null;
+}
 
-export const NoteEditor = () => {
-  const [note, setNote] = useState('');
+export const NoteEditor: FC<noteItemProps> = ({ noteItem }) => {
+  const [note, setNote] = useState<string>('');
+
+  useEffect(() => {
+    if (noteItem) {
+      const { text } = noteItem;
+      setNote(text);
+    }
+  }, [noteItem]);
 
   const handleNote = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {
     setNote(e.target.value);

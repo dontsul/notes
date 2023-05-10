@@ -4,7 +4,8 @@ import './reset.css';
 import './index.css';
 import App from './App';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { Note } from './components/note/Note';
+import { NoteEditor } from './components/noteEditor/NoteEditor';
+import { Workspace } from './components/workspace/Workspace';
 
 const router = createBrowserRouter([
   {
@@ -12,8 +13,8 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: '/:id',
-        element: <Note />,
+        path: '/note/:idNote',
+        element: <Workspace />,
       },
     ],
   },

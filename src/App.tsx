@@ -21,14 +21,14 @@ interface MyDate {
   hour: number;
   minute: number;
 }
-interface INote {
+export interface INote {
   id: string;
   title: string;
   text: string;
   date: MyDate;
 }
 
-interface IContext {
+export interface IContext {
   handleAddNote: (note: INote) => void;
   handleEditNote: (note: INote) => void;
   handleRemoveNote: (id: string) => void;
@@ -36,7 +36,8 @@ interface IContext {
   setNotes: Dispatch<SetStateAction<INote[] | null>>;
 }
 
-const NotesContext = React.createContext<IContext | string>('');
+// export const NotesContext = React.createContext<IContext | string>('');
+export const NotesContext = React.createContext<IContext | null>(null);
 
 function App() {
   const [notes, setNotes] = useState<null | INote[]>(null);
@@ -88,6 +89,8 @@ function App() {
     notes,
     setNotes,
   };
+
+  // console.log(notes);
 
   return (
     <div className="App ">
