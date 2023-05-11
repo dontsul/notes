@@ -5,25 +5,12 @@ export const SearchBox = () => {
   const [value, setValue] = useState('');
   const context = useContext(NotesContext);
 
-  const {
-    handleAddNote,
-    handleEditNote,
-    setOpenModal,
-    openModal,
-    setIsActiveNote,
-    isActiveNote,
-    notes,
-    statusNewNote,
-    setStatusNewNote,
-  } = context;
-
-  // const filterItems = (items: INote[], searchText: string): INote[] => {
-  //   const searchRegex = new RegExp(searchText, 'i');
-  //   return items.filter((item) => searchRegex.test(item.text) || searchRegex.test(item.title));
-  // };
+  const { notes, defaultNotes, filterSortNotes } = context;
 
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
+    filterSortNotes(defaultNotes, e.target.value);
+
     // filterItems(value);
   };
 

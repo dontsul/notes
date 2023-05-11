@@ -14,6 +14,10 @@ import { Modal } from './components/modal/Modal';
 import { Layout } from './layout/Layout';
 import { openDatabase, addNote, getNotes, deleteNoteById, updateNoteById } from './notesDB';
 import { MyDate } from './utils/dateUtils';
+
+import { filterByText } from './utils/filterByText';
+import { sortNotesByDate } from './utils/sortNotes';
+
 import './App.css';
 
 export interface INote {
@@ -27,7 +31,8 @@ export interface IContext {
   handleAddNote: (note: INote) => void;
   handleEditNote: (note: INote) => void;
   handleRemoveNote: (id: string) => void;
-  notes: INote[] | null;
+  notes: INote[];
+  defaultNotes: INote[];
   setNotes: Dispatch<SetStateAction<INote[]>>;
   isActiveNote: INote | null;
   setIsActiveNote: Dispatch<SetStateAction<INote | null>>;
@@ -35,16 +40,17 @@ export interface IContext {
   setOpenModal: (openModal: boolean) => void;
   statusNewNote: boolean;
   setStatusNewNote: Dispatch<SetStateAction<boolean>>;
+  filterSortNotes: (note: INote[], text: string) => void;
 }
 
 export const NotesContext = React.createContext<IContext>({} as IContext);
 
 function App() {
   const navigate = useNavigate();
+  const [defaultNotes, setDefaultNotes] = useState<INote[]>([] as INote[]);
   const [notes, setNotes] = useState<INote[]>([] as INote[]);
   const [isActiveNote, setIsActiveNote] = useState<null | INote>(null);
   const [openModal, setOpenModal] = useState<boolean>(false);
-  const [currentDate, setCurrentDate] = useState<MyDate>({} as MyDate);
   const [statusNewNote, setStatusNewNote] = useState<boolean>(false);
 
   useEffect(() => {
@@ -56,7 +62,7 @@ function App() {
       try {
         const result = await getNotes();
 
-        setNotes(result);
+        setDefaultNotes(result);
       } catch (error) {
         console.log(error);
       }
@@ -64,6 +70,23 @@ function App() {
 
     fetchNotes();
   }, []);
+
+  useEffect(() => {
+    setNotes(defaultNotes);
+  }, [defaultNotes]);
+
+  const filterSortNotes = (notesList: INote[], text: string) => {
+    Promise.resolve(notesList)
+      .then(sortNotesByDate)
+      .then((sortedNotes) => filterByText(sortedNotes, text))
+      .then((filteredNotes) => {
+        setNotes(filteredNotes);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   //ADD
   const handleAddNote = (note: INote) => {
     addNote(note)
@@ -131,6 +154,7 @@ function App() {
     handleEditNote,
     handleRemoveNote,
     notes,
+    defaultNotes,
     setNotes,
     isActiveNote,
     setIsActiveNote,
@@ -138,6 +162,7 @@ function App() {
     setOpenModal,
     statusNewNote,
     setStatusNewNote,
+    filterSortNotes,
   };
 
   return (
