@@ -1,11 +1,8 @@
 import React, {
-  useContext,
   useState,
   useEffect,
   useCallback,
   createContext,
-  FC,
-  ProviderProps,
   Dispatch,
   SetStateAction,
 } from 'react';
@@ -14,7 +11,6 @@ import { Modal } from './components/modal/Modal';
 import { Layout } from './layout/Layout';
 import { openDatabase, addNote, getNotes, deleteNoteById, updateNoteById } from './notesDB';
 import { MyDate } from './utils/dateUtils';
-
 import { filterByText } from './utils/filterByText';
 import { sortNotesByDate } from './utils/sortNotes';
 
@@ -43,7 +39,7 @@ export interface IContext {
   filterSortNotes: (note: INote[], text: string) => void;
 }
 
-export const NotesContext = React.createContext<IContext>({} as IContext);
+export const NotesContext = createContext<IContext>({} as IContext);
 
 function App() {
   const navigate = useNavigate();
@@ -88,66 +84,74 @@ function App() {
   };
 
   //ADD
-  const handleAddNote = (note: INote) => {
-    addNote(note)
-      .then((res) => {
-        if (notes !== null) {
-          setNotes((prevNotes) => {
-            const index = prevNotes.findIndex((n) => n.id === res.id);
-            if (index !== -1) {
-              prevNotes[index] = res;
-              return [...prevNotes];
-            } else {
-              return [...prevNotes, res];
-            }
-          });
-        }
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  };
-  //UPDATE
-  const handleEditNote = (note: INote) => {
-    updateNoteById(note)
-      .then((res) => {
-        if (notes !== null) {
-          setNotes((prevNotes) => {
-            const index = prevNotes.findIndex((n) => n.id === res.id);
-            if (index !== -1) {
-              prevNotes[index] = res;
-              return [...prevNotes];
-            } else {
-              return [...prevNotes, res];
-            }
-          });
-        }
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  };
-  //REMOVE
-  const handleRemoveNote = (id: string) => {
-    console.log(1);
+  const handleAddNote = useCallback(
+    (note: INote) => {
+      addNote(note)
+        .then((res) => {
+          if (defaultNotes !== null) {
+            setDefaultNotes((prevNotes) => {
+              const index = prevNotes.findIndex((n) => n.id === res.id);
+              setStatusNewNote(false);
 
-    deleteNoteById(id)
-      .then(() => {
-        console.log(2);
-        const note = notes?.find((elem) => id === elem.id);
-        if (note) {
-          const newNotes = notes?.filter((note) => note.id !== id);
-          if (newNotes !== undefined) {
-            setNotes(newNotes);
-            setIsActiveNote(null);
-            navigate('/');
+              if (index !== -1) {
+                prevNotes[index] = res;
+                return [...prevNotes];
+              } else {
+                return [...prevNotes, res];
+              }
+            });
           }
-        }
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  };
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
+    [defaultNotes]
+  );
+  //UPDATE
+  const handleEditNote = useCallback(
+    (note: INote) => {
+      updateNoteById(note)
+        .then((res) => {
+          if (defaultNotes !== null) {
+            setDefaultNotes((prevNotes) => {
+              const index = prevNotes.findIndex((n) => n.id === res.id);
+              if (index !== -1) {
+                prevNotes[index] = res;
+                return [...prevNotes];
+              } else {
+                return [...prevNotes, res];
+              }
+            });
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
+    [defaultNotes]
+  );
+  //REMOVE
+  const handleRemoveNote = useCallback(
+    (id: string) => {
+      deleteNoteById(id)
+        .then(() => {
+          const note = defaultNotes?.find((elem) => id === elem.id);
+          if (note) {
+            const newNotes = defaultNotes?.filter((note) => note.id !== id);
+            if (newNotes !== undefined) {
+              setNotes(newNotes);
+              setIsActiveNote(null);
+              navigate('/');
+            }
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
+    [navigate, defaultNotes]
+  );
 
   const context: IContext = {
     handleAddNote,

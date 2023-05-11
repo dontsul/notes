@@ -8,7 +8,7 @@ import { INote } from '../App';
 export const filterByText = (items: INote[], searchText: string): INote[] => {
   const newNotes = items.filter((item) => {
     return (
-      // item.title.toLowerCase().includes(searchText.toLowerCase()) ||
+      item.title.toLowerCase().includes(searchText.toLowerCase()) ||
       item.text.toLowerCase().includes(searchText.toLowerCase())
     );
   });

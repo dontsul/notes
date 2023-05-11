@@ -4,7 +4,6 @@ import {
   ChangeEvent,
   useContext,
   useEffect,
-  FC,
   useRef,
   KeyboardEvent,
 } from 'react';
@@ -16,6 +15,7 @@ import { IconBtn } from '../iconBtn/IconBtn';
 import { MyDate } from '../../utils/dateUtils';
 import { NotesContext } from '../../App';
 import { createCurrentDate } from '../../utils/dateUtils';
+import { formatDate } from '../../utils/formateDate';
 
 export const NoteEditor = () => {
   const navigate = useNavigate();
@@ -67,11 +67,6 @@ export const NoteEditor = () => {
     setIsActiveNote(isActiveNote);
   };
 
-  useEffect(() => {
-    if (!isActiveNote) {
-    }
-  }, [notes, note, isActiveNote]);
-
   const onWriteNote = useCallback(() => {
     if (titleRef.current !== null) {
       titleRef.current.focus();
@@ -91,7 +86,7 @@ export const NoteEditor = () => {
       setTitleNote('');
       setDateInfo(null);
     }
-    setStatusNewNote(false);
+    // setStatusNewNote(false);
   }, [statusNewNote, onWriteNote, setStatusNewNote]);
 
   const onAddNewNote = () => {
@@ -124,7 +119,10 @@ export const NoteEditor = () => {
     }
   };
   const handleBlurText = (): void => {
-    onAddNewNote();
+    if (statusNewNote) {
+      onAddNewNote();
+    }
+
     if (!statusNewNote) {
       onUpdateNote();
     }
@@ -143,22 +141,11 @@ export const NoteEditor = () => {
     }
   };
 
-  // const handleKeyDownText = (e: KeyboardEvent<HTMLTextAreaElement>): void => {
-  //   if (e.key === 'Enter') {
-  //     onAddNewNote();
-  //   }
-  // };
-
   return (
     <>
       <div className="flex items-center justify-between">
         <div className="flex items-center justify-center text-sm font-semibold py-6 h-5 text-blue-gray-300">
-          {dateInfo &&
-            `${dateInfo?.day}.${dateInfo?.month}.${dateInfo?.year} at ${dateInfo?.hour}:${
-              dateInfo?.minute.toString().length === 1
-                ? `0${dateInfo?.minute}`
-                : `${dateInfo?.minute}`
-            }`}
+          {dateInfo && formatDate(dateInfo)}
         </div>
         <div className="flex">
           <IconBtn
@@ -195,7 +182,6 @@ export const NoteEditor = () => {
           value={note}
           ref={textRef}
           onBlur={handleBlurText}
-          // onKeyDown={handleKeyDownText}
           placeholder="Enter your text here..."
           className="
         w-full 

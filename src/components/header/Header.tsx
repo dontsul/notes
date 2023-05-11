@@ -2,9 +2,8 @@ import { SearchBox } from '../searchBox/SearchBox';
 import { IconBtn } from '../iconBtn/IconBtn';
 import { AiFillPlusCircle } from 'react-icons/ai';
 import { AiTwotoneDelete } from 'react-icons/ai';
-import { TfiWrite } from 'react-icons/tfi';
-import { useContext, useState, useEffect } from 'react';
-import { INote, NotesContext } from '../../App';
+import { useContext } from 'react';
+import { NotesContext } from '../../App';
 import { useNavigate, useParams } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { createCurrentDate } from '../../utils/dateUtils';
@@ -14,9 +13,6 @@ export const Header = () => {
   const context = useContext(NotesContext);
   const { idNote } = useParams();
   const {
-    handleAddNote,
-    handleEditNote,
-    handleRemoveNote,
     isActiveNote,
     setIsActiveNote,
     setStatusNewNote,
@@ -24,7 +20,6 @@ export const Header = () => {
     setNotes,
     setOpenModal,
     openModal,
-    statusNewNote,
   } = context;
 
   const onAddNote = () => {
@@ -64,7 +59,6 @@ export const Header = () => {
             handleClick={onDeleteNote}
             status={Boolean(idNote)}
           />
-          {/* <IconBtn color="white" size={25} element={TfiWrite} handleClick={} status={Boolean(idNote)} /> */}
         </div>
         <div>
           <SearchBox />

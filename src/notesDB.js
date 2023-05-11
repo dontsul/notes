@@ -97,10 +97,6 @@ function updateNoteById(newNote) {
       const objectStore = transaction.objectStore(NOTES_STORE_NAME);
       const request = objectStore.put(newNote);
 
-      // request.onsuccess = function (event) {
-      //   resolve();
-      // };
-
       request.onsuccess = function (event) {
         resolve({ ...newNote, id: event.target.result });
       };

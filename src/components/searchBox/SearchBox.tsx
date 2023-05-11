@@ -1,17 +1,15 @@
 import { useState, ChangeEvent, useContext } from 'react';
-import { INote, NotesContext } from '../../App';
+import { NotesContext } from '../../App';
 
 export const SearchBox = () => {
   const [value, setValue] = useState('');
   const context = useContext(NotesContext);
 
-  const { notes, defaultNotes, filterSortNotes } = context;
+  const { defaultNotes, filterSortNotes } = context;
 
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
     filterSortNotes(defaultNotes, e.target.value);
-
-    // filterItems(value);
   };
 
   return (
