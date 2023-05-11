@@ -15,7 +15,7 @@ export const ListNotes = () => {
   }, [notes]);
 
   return (
-    <ul className="flex flex-col items-satrt justify-center border border-blue-gray-100 ">
+    <ul className="flex flex-col items-satrt justify-center  ">
       {notesList &&
         notesList.map((note: INote) => {
           return <Note key={note.id} note={note} />;

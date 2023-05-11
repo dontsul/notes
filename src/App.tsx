@@ -140,7 +140,7 @@ function App() {
           if (note) {
             const newNotes = defaultNotes?.filter((note) => note.id !== id);
             if (newNotes !== undefined) {
-              setNotes(newNotes);
+              setDefaultNotes(newNotes);
               setIsActiveNote(null);
               navigate('/');
             }
