@@ -28,8 +28,11 @@ function addNote(note) {
       const objectStore = transaction.objectStore(NOTES_STORE_NAME);
       const request = objectStore.add(note);
 
+      // request.onsuccess = function (event) {
+      //   resolve();
+      // };
       request.onsuccess = function (event) {
-        resolve();
+        resolve({ ...note, id: event.target.result });
       };
 
       request.onerror = function (event) {
@@ -94,8 +97,12 @@ function updateNoteById(newNote) {
       const objectStore = transaction.objectStore(NOTES_STORE_NAME);
       const request = objectStore.put(newNote);
 
+      // request.onsuccess = function (event) {
+      //   resolve();
+      // };
+
       request.onsuccess = function (event) {
-        resolve();
+        resolve({ ...newNote, id: event.target.result });
       };
 
       request.onerror = function (event) {

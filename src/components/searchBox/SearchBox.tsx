@@ -1,10 +1,30 @@
-import { useState, ChangeEvent } from 'react';
+import { useState, ChangeEvent, useContext } from 'react';
+import { INote, NotesContext } from '../../App';
 
 export const SearchBox = () => {
   const [value, setValue] = useState('');
+  const context = useContext(NotesContext);
+
+  const {
+    handleAddNote,
+    handleEditNote,
+    setOpenModal,
+    openModal,
+    setIsActiveNote,
+    isActiveNote,
+    notes,
+    statusNewNote,
+    setStatusNewNote,
+  } = context;
+
+  // const filterItems = (items: INote[], searchText: string): INote[] => {
+  //   const searchRegex = new RegExp(searchText, 'i');
+  //   return items.filter((item) => searchRegex.test(item.text) || searchRegex.test(item.title));
+  // };
 
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
+    // filterItems(value);
   };
 
   return (

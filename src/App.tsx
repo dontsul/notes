@@ -9,18 +9,13 @@ import React, {
   Dispatch,
   SetStateAction,
 } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Modal } from './components/modal/Modal';
 import { Layout } from './layout/Layout';
 import { openDatabase, addNote, getNotes, deleteNoteById, updateNoteById } from './notesDB';
+import { MyDate } from './utils/dateUtils';
 import './App.css';
 
-interface MyDate {
-  year?: number;
-  month?: number;
-  day?: number;
-  hour: number;
-  minute: number;
-}
 export interface INote {
   id: string;
   title: string;
@@ -33,24 +28,24 @@ export interface IContext {
   handleEditNote: (note: INote) => void;
   handleRemoveNote: (id: string) => void;
   notes: INote[] | null;
-  setNotes: Dispatch<SetStateAction<INote[] | null>>;
+  setNotes: Dispatch<SetStateAction<INote[]>>;
+  isActiveNote: INote | null;
+  setIsActiveNote: Dispatch<SetStateAction<INote | null>>;
+  openModal: boolean;
+  setOpenModal: (openModal: boolean) => void;
+  statusNewNote: boolean;
+  setStatusNewNote: Dispatch<SetStateAction<boolean>>;
 }
 
-// export const NotesContext = React.createContext<IContext | string>('');
-export const NotesContext = React.createContext<IContext | null>(null);
+export const NotesContext = React.createContext<IContext>({} as IContext);
 
 function App() {
-  const [notes, setNotes] = useState<null | INote[]>(null);
-
-  const now = new Date();
-
-  const myDate: MyDate = {
-    year: now.getFullYear(),
-    month: now.getMonth() + 1,
-    day: now.getDate(),
-    hour: now.getHours(),
-    minute: now.getMinutes(),
-  };
+  const navigate = useNavigate();
+  const [notes, setNotes] = useState<INote[]>([] as INote[]);
+  const [isActiveNote, setIsActiveNote] = useState<null | INote>(null);
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [currentDate, setCurrentDate] = useState<MyDate>({} as MyDate);
+  const [statusNewNote, setStatusNewNote] = useState<boolean>(false);
 
   useEffect(() => {
     openDatabase();
@@ -69,17 +64,66 @@ function App() {
 
     fetchNotes();
   }, []);
-
+  //ADD
   const handleAddNote = (note: INote) => {
-    addNote(note);
+    addNote(note)
+      .then((res) => {
+        if (notes !== null) {
+          setNotes((prevNotes) => {
+            const index = prevNotes.findIndex((n) => n.id === res.id);
+            if (index !== -1) {
+              prevNotes[index] = res;
+              return [...prevNotes];
+            } else {
+              return [...prevNotes, res];
+            }
+          });
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   };
-
+  //UPDATE
   const handleEditNote = (note: INote) => {
-    updateNoteById(note);
+    updateNoteById(note)
+      .then((res) => {
+        if (notes !== null) {
+          setNotes((prevNotes) => {
+            const index = prevNotes.findIndex((n) => n.id === res.id);
+            if (index !== -1) {
+              prevNotes[index] = res;
+              return [...prevNotes];
+            } else {
+              return [...prevNotes, res];
+            }
+          });
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   };
-
+  //REMOVE
   const handleRemoveNote = (id: string) => {
-    deleteNoteById(id);
+    console.log(1);
+
+    deleteNoteById(id)
+      .then(() => {
+        console.log(2);
+        const note = notes?.find((elem) => id === elem.id);
+        if (note) {
+          const newNotes = notes?.filter((note) => note.id !== id);
+          if (newNotes !== undefined) {
+            setNotes(newNotes);
+            setIsActiveNote(null);
+            navigate('/');
+          }
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   };
 
   const context: IContext = {
@@ -88,16 +132,20 @@ function App() {
     handleRemoveNote,
     notes,
     setNotes,
+    isActiveNote,
+    setIsActiveNote,
+    openModal,
+    setOpenModal,
+    statusNewNote,
+    setStatusNewNote,
   };
-
-  // console.log(notes);
 
   return (
     <div className="App ">
       <NotesContext.Provider value={context}>
         <Layout />
+        <Modal />
       </NotesContext.Provider>
-      {/* <Modal /> */}
     </div>
   );
 }

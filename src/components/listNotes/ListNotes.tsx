@@ -2,17 +2,17 @@ import { Note } from '../note/Note';
 import { useContext, useState, useEffect } from 'react';
 import { NotesContext } from '../../App';
 import { INote } from '../../App';
+import { sortNotesByDate } from '../../utils/sortNotes';
 
 export const ListNotes = () => {
   const [notesList, setNoteList] = useState<INote[] | null>(null);
-  const context = useContext(NotesContext);
+  const { notes } = useContext(NotesContext);
 
   useEffect(() => {
-    if (context && context.notes) {
-      const { notes } = context;
-      setNoteList(notes);
+    if (notes !== null) {
+      setNoteList(sortNotesByDate(notes));
     }
-  }, [context]);
+  }, [notes]);
 
   return (
     <ul className="flex flex-col items-satrt justify-center border border-blue-gray-100 ">
